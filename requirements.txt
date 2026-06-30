@@ -1,2 +1,0 @@
-# The Evidence API reuses the proven IRP PR2b RFC 3161 verifier (no IRP Core changes).
-irp-capture[integrity] @ git+https://github.com/S0tman/irp-capture.git@main

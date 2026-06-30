@@ -1,0 +1,12 @@
+[project]
+name = "irp-evidence-api"
+version = "0"
+description = "IRP Evidence API — externally-witnessed evidence layer"
+requires-python = ">=3.9"
+dependencies = [
+    "flask>=3",
+    "irp-capture[integrity] @ git+https://github.com/S0tman/irp-capture.git@main",
+]
+
+[tool.vercel]
+entrypoint = "api.index:app"

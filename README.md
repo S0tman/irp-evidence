@@ -44,7 +44,8 @@ Exact-byte. The digest is SHA-256 over the exact UTF-8 bytes of the exported fil
 ## Client integration (the easy way)
 
 ```html
-<script src="https://evidence.intentrecord.xyz/sdk/irp-evidence.js"></script>
+<!-- SDK served from the public repo via jsDelivr; API calls go to evidence.intentrecord.xyz -->
+<script src="https://cdn.jsdelivr.net/gh/S0tman/irp-evidence@main/sdk/irp-evidence.js"></script>
 <irp-evidence-receipt service-id="service-A"></irp-evidence-receipt>
 ```
 
