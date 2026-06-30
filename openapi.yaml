@@ -1,0 +1,73 @@
+openapi: 3.1.0
+info:
+  title: IRP Evidence API
+  version: "0"
+  description: >
+    Externally-witnessed evidence for exact-byte snapshots. The timestamp
+    endpoint receives only a SHA-256 digest. Stateless, zero retention.
+servers:
+  - url: https://evidence.intentrecord.xyz
+paths:
+  /v1/timestamp:
+    post:
+      summary: Timestamp a digest at an RFC 3161 TSA. Only the digest is sent.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [digest_hex, hash_alg]
+              properties:
+                digest_hex: { type: string, pattern: "^[0-9a-f]{64}$" }
+                hash_alg: { type: string, enum: [sha256] }
+      responses:
+        "200":
+          description: Timestamp token (base64) plus metadata.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tsr_b64: { type: string }
+                  gen_time: { type: string }
+                  accuracy_seconds: { type: [number, "null"] }
+                  policy: { type: string }
+                  serial: { type: string }
+                  tsa: { type: string }
+        "400": { description: Invalid digest. }
+        "502": { description: TSA unavailable. }
+  /v1/verify:
+    post:
+      summary: Verify an exact-byte evidence package. Granular report.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [manifest_b64, token_b64]
+              properties:
+                manifest_b64: { type: string, description: base64 of exact manifest bytes }
+                token_b64: { type: string, description: base64 of the .tsr token }
+                event_b64: { type: string, description: base64 of exact event bytes (optional) }
+      responses:
+        "200":
+          description: Granular verification report (never a bare trusted:true).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  event_digest_matches_manifest: {}
+                  manifest_imprint_ok: { type: boolean }
+                  timestamp_signature_ok: { type: boolean }
+                  tsa_trust: { type: string }
+                  externally_witnessed_at: { type: string }
+                  externally_witnessed: { type: boolean }
+                  citizen_identity: { type: string }
+                  request_delivery: { type: string }
+                  underlying_truth: { type: string }
+                  result: { type: string }
+        "400": { description: Bad input. }
+        "422": { description: Unparseable manifest or token. }

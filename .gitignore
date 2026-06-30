@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Vercel
+.vercel/
+
+# Node (if the SDK gains tooling later)
+node_modules/
+
+# OS / editor
+.DS_Store
+*.swp
