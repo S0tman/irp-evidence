@@ -1,22 +1,30 @@
 # IRP Evidence API + SDK
 
-A small, honest service that lets anyone prove that an exact evidence snapshot existed no later than a given time, without revealing any personal data. It is the externally-witnessed layer for [IRP](https://github.com/S0tman/irp-capture), packaged so a client integration is a few lines.
+A small, honest service that proves a file existed, unchanged, no later than a given moment, without revealing anything inside it. It is the outside-witness layer for [IRP](https://github.com/S0tman/irp-capture), packaged so adding it to an app takes a few lines.
 
 First user: the Forget Me Sweden privacy-evidence PoC. The same service is the seed of IRP's commercial hosted-attestation layer.
 
-**What it proves:** this exact snapshot existed no later than time T (an external RFC 3161 timestamp authority witnessed its digest).
-**What it does not prove:** identity, delivery, or the truth of the underlying statement. The verifier always says so.
+**What it proves:** this exact file existed, unchanged, no later than time T. An independent timestamping service witnessed a fingerprint of it.
+**What it does not prove:** who you are, that anything was delivered, or that the file's contents are true. The checker always says so.
+
+## In plain words
+
+IRP keeps a record of decisions in a file on your own computer (a local JSON file). A fair question follows: if the file sits on your machine, you could edit it and recompute its checks, so why should an outsider (a regulator, a court, a counterparty) trust it, and what stops you backdating an entry?
+
+This service is the answer. Before you rely on a record, you send a *fingerprint* of the file (not the file itself) to an independent timestamping service. It signs that fingerprint together with the current date and time. From then on, anyone can check two things: that the file still matches the fingerprint, and that the timestamp is genuine. Change one character later and the fingerprint stops matching, so the edit is obvious. You cannot backdate, because the date came from someone other than you.
+
+The service never sees your data. Only the fingerprint leaves your computer, and a fingerprint cannot be turned back into the file it came from.
 
 ## Privacy and firewall
 
-- The timestamp endpoint receives **only a SHA-256 digest**. No event, no manifest, no identity. The operator cannot see citizen data because it never arrives.
+- The timestamp endpoint receives **only a fingerprint (a SHA-256 hash)**. No event, no manifest, no identity. The operator cannot see citizen data because it never arrives.
 - Stateless: no database, no body logging, no retention.
 - The verifier is **open and runs offline**, so no one is forced to trust the hosted service.
 - Served from a neutral domain (`evidence.intentrecord.xyz`), not a compliance brand.
 
-## Integrity model
+## How the fingerprint works
 
-Exact-byte. The digest is SHA-256 over the exact UTF-8 bytes of the exported files. Any reformat invalidates verification. This is deliberately simpler than IRP Core's RFC 8785 canonicalisation; the goal here is to prove an exact package, not equivalence across reformatted JSON.
+The fingerprint is a SHA-256 hash of the exact bytes of the file. Change anything, even reformatting the JSON, and the fingerprint changes, so the check fails. This is deliberately stricter and simpler than IRP Core's RFC 8785 canonicalisation: here we prove one exact file, not that two differently-formatted files carry the same meaning.
 
 ## API
 
