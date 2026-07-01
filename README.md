@@ -65,12 +65,6 @@ python3 verifier/verify_package.py evidence-package.zip
 ```
 Recomputes the exact-byte digests, checks the event→manifest→token chain, verifies the RFC 3161 signature (RSA or ECDSA), and prints a granular report. Verification never depends on the hosted API.
 
-## Deploy
-
-1. Buy `intentrecord.xyz`, add it in Vercel, set up `evidence.intentrecord.xyz`.
-2. `vercel deploy` from this directory. The Python functions install `irp-capture[integrity]` from git (see `requirements.txt`).
-3. Set `TSA_URL` env var if you want a TSA other than the freetsa dev default.
-
 ## Known follow-on (not in this PoC)
 
 Certificate-chain and validity-period validation (`TRUSTED`/`UNTRUSTED`, expired-cert). The verifier checks the signature with the embedded TSA cert but does not validate the chain to a configured trust root; it reports `UNTRUSTED` honestly. Required for IMY-grade evidence, lands with the qualified-TSA layer.
