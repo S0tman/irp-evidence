@@ -20,7 +20,6 @@ The service never sees your data. Only the fingerprint leaves your computer, and
 - The timestamp endpoint receives **only a fingerprint (a SHA-256 hash)**. No event, no manifest, no identity. The operator cannot see citizen data because it never arrives.
 - Stateless: no database, no body logging, no retention.
 - The verifier is **open and runs offline**, so no one is forced to trust the hosted service.
-- Served from a neutral domain (`evidence.intentrecord.xyz`), not a compliance brand.
 
 ## How the fingerprint works
 
